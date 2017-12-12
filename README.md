@@ -5,7 +5,7 @@
  ```
 # 用法
 ## debug公开功能; 只需传递这个函数的模块名称，它就会返回一个console.error给你传递调试语句。这将允许您切换模块的不同部分以及对不同模块调试输出。
-#用例 [_app.js_](./examples/node/app.js):
+用例 [_app.js_](./examples/node/app.js):
 
 ```js
 var debug = require('debug')('http')
