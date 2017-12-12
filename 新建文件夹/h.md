@@ -21,3 +21,22 @@
 　　4、三分支的关系
 
 　　简单工厂模式通常伴随着对象的具体类型与工厂具体类型的一一对应，客户端代码根据需要选择合适的具体类型工厂使用。当这个选择包含复杂的逻辑时，就可以创建一个单一的工厂类，用以包含这种选择逻辑，根据参数的不同选择实现不同的具体对象。这个工厂类不需要由每个具体产品实现一个自己的具体的工厂类，所以可以将工厂方法设置为静态方法，这就有了工厂方法模式。而抽象工厂方法模式便是封装着这样一组有着共同主题的工厂方法模式中的工厂。
+  
+  ## js偏函数（转）
+javascript中函数也早早的就是一等公民，对于javascript的偏函数这个概念，就是基于这样的基础之上。
+偏函数你可以理解为工厂函数，也就是这种函数是用来当做模板来生产出函数的，因为作为一等公民，函数可以作为返回值。
+首先先看一下javascript对类型的判断的例子：
+var toString = Object.prototype.toString; var isString = function (obj){ return toString.call(obj) == '[object String]'; }; var isFunction = function(obj){ return toString.call(obj) == '[object Function]'; };
+上面的例子可以看出来，两个函数不同的就是'[object Function]'，反复书写相似的代码是一种效率的浪费，如果函数比较复杂的时候，我们必须做一些抽象，那么我们声明一个偏函数来看看效果。
+'use strict';
+//偏函数
+var toString = Object.prototype.toString; // var isString = function (obj){ // return toString.call(obj) == '[object String]'; // }; // var isFunction = function(obj){ // return toString.call(obj) == '[object Function]'; // };
+var isType = function (type){ return function(obj){ return toString.call(obj) == '[object '+type+']'; }; };
+var isString = isType('String');
+var isFunction = isType('Function');
+var func = function(){
+};
+console.log(isFunction(func));
+isType就是一个偏函数，用来返回一个函数，返回的函数是根据入参生成的判断类型的函数。
+这样用来返回函数的函数叫做偏函数。
+
