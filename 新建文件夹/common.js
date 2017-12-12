@@ -1,3 +1,12 @@
+ /**
+  * 这里暴露的 setup方法 其实就是对外传递了一个 createDebug 工厂方法的闭包
+  * 然后 createDebug 通过对 debug 对象的包装 成功创建出了一个 叫 debug 的 console.error  对象 直接 std 输出
+  * 用了 ms 包 添加高亮
+  * 装饰器模式  工厂模式 这俩 然后 这个 东西 就被造出来了
+  * 具体怎么玩 在这个项目的根目录 打开 cmd  然后  set DEBUG=worker:* node example/node/worker.js
+  * 颜色控制系统 太简单 ，看看就会了
+  * 一定要 在package.json 同级别下面 npm install 一下 才能跑 
+  */
 module.exports = function setup(env) {
   createDebug.debug = createDebug['default'] = createDebug;
   createDebug.coerce = coerce;
