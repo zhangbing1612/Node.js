@@ -4,7 +4,6 @@
   * 用了 ms 包 添加高亮
   * 装饰器模式  工厂模式 
   * 运行： 在这个项目的根目录 打开 cmd  然后  set DEBUG=worker:* node example/node/worker.js
-  * 一定要 在package.json 同级别下面 npm install 一下 才能跑 
   */
 module.exports = function setup(env) {
   createDebug.debug = createDebug['default'] = createDebug;
@@ -24,7 +23,7 @@ module.exports = function setup(env) {
   });
 
   /**
-   * Active `debug` instances.
+   * Active `debug` instances.活动的debug实例
    * debug实例
    */
   createDebug.instances = [];
@@ -79,7 +78,7 @@ module.exports = function setup(env) {
 //工厂模式的体现，装饰器模式 在 同级 node.js 里面体现的 ，
 //就哪个 module.exports = require('./common')(exports); 这就动态扩展了这个类了 ，具体实现还是在 setup 方法中
   function createDebug(namespace) {
-    var prevTime;
+    var prevTime;//过去时间
 
     function debug() {
       // disabled?
@@ -88,8 +87,8 @@ module.exports = function setup(env) {
       var self = debug;
 
       // set `diff` timestamp
-      var curr = +new Date();
-      var ms = curr - (prevTime || curr);
+      var curr = +new Date();//当前时间
+      var ms = curr - (prevTime || curr);//运行时间
       self.diff = ms;
       self.prev = prevTime;
       self.curr = curr;
@@ -112,6 +111,7 @@ module.exports = function setup(env) {
       }
 
       // apply any `formatters` transformations
+      //格式化输出用的  对传入的参数 做一次格式化 然后 输出一种固定到模式
       var index = 0;
       //这 正则替换  e.g.  (This is an example %% , hello) => This is an example hello
       //这是 用 replace 方法替代了循环检查替换
@@ -135,13 +135,14 @@ module.exports = function setup(env) {
       });
 
       // apply env-specific formatting (colors, etc.)
+     //函数依赖 调用 信息格式化参数 加上 颜色
       createDebug.formatArgs.call(self, args);
 
       var logFn = self.log || createDebug.log;
       //这里直接调用的是从装饰器继承过来的方法，然后就输出了
       logFn.apply(self, args);
     }
-
+    //装饰完成之后设置属性
     debug.namespace = namespace;
     debug.enabled = createDebug.enabled(namespace);
     debug.useColors = createDebug.useColors();
@@ -151,10 +152,11 @@ module.exports = function setup(env) {
     //debug.rawLog = rawLog;
 
     // env-specific initialization logic for debug instances调试实例的特定于环境的初始化
+   //函数依赖
     if ('function' === typeof createDebug.init) {
       createDebug.init(debug);
     }
-    //push 应为进行缓存
+    //push 应为进行缓，自动注册一个活动地 debug 对象
     createDebug.instances.push(debug);
 
     //返回装饰过地 stderr 对象 ！
@@ -179,7 +181,7 @@ module.exports = function setup(env) {
    * @param {String} namespaces
    * @api public
    */
-
+//动态修改应该监听地模块
   function enable(namespaces) {
     createDebug.save(namespaces);
 
@@ -223,7 +225,7 @@ module.exports = function setup(env) {
    * @return {Boolean}
    * @api public
    */
-
+//判断 输入的模块是否被激活监听
   function enabled(name) {
     if (name[name.length - 1] === '*') {
       return true;
@@ -249,7 +251,7 @@ module.exports = function setup(env) {
    * @return {Mixed}
    * @api private
    */
-
+//判断信息正确与否
   function coerce(val) {
     if (val instanceof Error) return val.stack || val.message;
     return val;
